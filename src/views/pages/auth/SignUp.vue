@@ -4,32 +4,58 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import api from '@/layout/api/api'
 
+const name = ref('');
 const username = ref('');
 const password = ref('');
-const checked = ref(false);
-const errorMessage = ref('');
+const confirmPassword = ref('');
+const email = ref('');
 
+const validate_username = ref(true);
+const validate_email = ref(true);
+const validate_password = ref(true);
+const validate_password_confirmation = ref(true);
+
+const errorMessage = ref('');
 const router = useRouter();
 
-const submitLoginForm = async () => {
+// const checked = ref(false);
+const validateUsername = () => {
+    return validate_username.value = username.value.length >= 6;
+};
+
+const validatePassword = () => {
+    return validate_password.value = password.value.length >= 6;
+};
+
+const validateEmail = () => {
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return validate_email.value = emailPattern.test(email.value);
+};
+
+const validateConfirmPassword = () => {
+    return validate_password_confirmation.value = confirmPassword.value === password.value;
+}
+
+const submitForm = async () => {
+    if (!validateUsername() || !validatePassword() || !validateEmail() || !validateConfirmPassword()) {
+        return;
+    }
     try {
         errorMessage.value = '';
-        if (password.value !== confirmPassword.value) {
-            errorMessage = 'Passwords do not match';
-        } else {
-            const response = await api.post(`/users`, {
-                name: name.value,
-                username: username.value,
-                password: password.value,
-                email: email.value,
-            });
-            // console.log(response.data);
-            router.push('/auth/login');
-        }
+        const response = await api.post(`/users`, {
+            name: name.value,
+            username: username.value,
+            password: password.value,
+            email: email.value,
+        });
+        // console.log(response.data);
+        router.push('/auth/login');
     } catch (error) {
         errorMessage.value = error.response.data.message || 'An error occurred';
     }
 }
+
+
 </script>
 
 <template>
@@ -57,24 +83,38 @@ const submitLoginForm = async () => {
                             </g>
                         </svg>
                         <div class="text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4">Welcome to Music App!</div>
-                        <span class="text-muted-color font-medium">Sign in to continue</span>
+                        <span class="text-muted-color font-medium">Create an account to explore the app!</span>
                     </div>
 
-                    <form @submit.prevent="submitLoginForm">
-                        <label for="email1" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Username</label>
-                        <InputText id="email1" type="text" placeholder="Username" class="w-full md:w-[30rem] mb-8" v-model="username" />
+                    <form @submit.prevent="submitForm">
+                        <label for="name" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Name</label>
+                        <InputText id="name" type="text" placeholder="Name" class="w-full md:w-[30rem] mb-8" v-model="name" />
+
+                        <label for="email1" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Email</label>
+                        <InputText id="email1" type="text" placeholder="Email" class="w-full md:w-[30rem] mb-8" v-model="email" />
+                        <Message severity="error" v-if="!validate_email">Invalid email</Message>
+
+                        <label for="username" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Username</label>
+                        <InputText id="username" type="text" placeholder="Username" class="w-full md:w-[30rem] mb-8" v-model="username" />
+                        <Message severity="error" v-if="!validate_username">Username must be at least 6 characters</Message>
 
                         <label for="password1" class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2">Password</label>
                         <Password id="password1" v-model="password" placeholder="Password" :toggleMask="true" class="mb-4" fluid :feedback="false"></Password>
+                        <Message severity="error" v-if="!validate_password" class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2">Password must be at least 6 characters</Message>
+
+                        <label for="password2" class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2">Confirm password</label>
+                        <Password id="password2" v-model="confirmPassword" placeholder="Re-enter your password" :toggleMask="true" class="mb-4" fluid :feedback="false"></Password>
+                        <Message severity="error" v-if="!validate_password_confirmation" class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2">Passwords do not match!</Message>
 
                         <div class="flex items-center justify-between mt-2 mb-8 gap-8">
-<!--                            <div class="flex items-center">-->
-<!--                                <Checkbox v-model="checked" id="rememberme1" binary class="mr-2"></Checkbox>-->
-<!--                                <label for="rememberme1">Remember me</label>-->
-<!--                            </div>-->
-                            <span class="font-medium no-underline ml-2 text-right cursor-pointer text-primary">Forgot password?</span>
+                            <!--                            <div class="flex items-center">-->
+                            <!--                                <Checkbox v-model="checked" id="rememberme1" binary class="mr-2"></Checkbox>-->
+                            <!--                                <label for="rememberme1">Remember me</label>-->
+                            <!--                            </div>-->
+                            <router-link class="font-medium no-underline ml-2 text-right cursor-pointer text-primary" :to="{ name: 'login' }">Already have an account? Sign in!</router-link>
                         </div>
-                        <Button label="Sign In" class="w-full"></Button>
+                        <Message severity="error" v-if="errorMessage" class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2">{{ errorMessage }}</Message>
+                        <Button type="submit" label="Create account" class="w-full"></Button>
                     </form>
                 </div>
             </div>

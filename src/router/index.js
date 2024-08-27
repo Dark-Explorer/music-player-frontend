@@ -100,6 +100,11 @@ const router = createRouter({
                     component: () => import('@/views/pages/Crud.vue')
                 },
                 {
+                    path: '/artists',
+                    name: 'artists',
+                    component: () => import('@/views/Artist.vue')
+                },
+                {
                     path: '/documentation',
                     name: 'documentation',
                     component: () => import('@/views/pages/Documentation.vue')
@@ -121,6 +126,11 @@ const router = createRouter({
             path: '/auth/login',
             name: 'login',
             component: () => import('@/views/pages/auth/Login.vue')
+        },
+        {
+            path: '/auth/signup',
+            name: 'signup',
+            component: () => import('@/views/pages/auth/SignUp.vue')
         },
         {
             path: '/auth/access',
