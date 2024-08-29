@@ -3,6 +3,7 @@ import FloatingConfigurator from '@/components/FloatingConfigurator.vue';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import api from '@/layout/api/api'
+import AuthService from '@/layout/api/auth'
 
 const username = ref('');
 const password = ref('');
@@ -12,24 +13,20 @@ const errorMessage = ref('');
 const router = useRouter();
 
 const submitLoginForm = async () => {
-    try {
         errorMessage.value = '';
-        if (password.value !== confirmPassword.value) {
-            errorMessage = 'Passwords do not match';
-        } else {
-            const response = await api.post(`/users`, {
-                name: name.value,
-                username: username.value,
-                password: password.value,
-                email: email.value,
-            });
-            // console.log(response.data);
-            router.push('/auth/login');
-        }
-    } catch (error) {
-        errorMessage.value = error.response.data.message || 'An error occurred';
-    }
+        await api.post(`/auth/token`, {
+            username: username.value,
+            password: password.value,
+        }).then((response) => {
+            router.push('/');
+            localStorage.setItem('token', response.data.result.token);
+        }).catch ((error) => {
+            errorMessage.value = error.response.data.message || 'An error occurred';
+        });
 }
+
+
+
 </script>
 
 <template>
@@ -58,6 +55,7 @@ const submitLoginForm = async () => {
                         </svg>
                         <div class="text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4">Welcome to Music App!</div>
                         <span class="text-muted-color font-medium">Sign in to continue</span>
+                        <Message severity="error" v-if="errorMessage" class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2" style="margin-top: 20px">Invalid username or password</Message>
                     </div>
 
                     <form @submit.prevent="submitLoginForm">
@@ -73,8 +71,9 @@ const submitLoginForm = async () => {
 <!--                                <label for="rememberme1">Remember me</label>-->
 <!--                            </div>-->
                             <span class="font-medium no-underline ml-2 text-right cursor-pointer text-primary">Forgot password?</span>
+                            <router-link class="font-medium no-underline ml-2 text-right cursor-pointer text-primary" :to="{ name: 'signup' }">Don't have an account? Create one here!</router-link>
                         </div>
-                        <Button label="Sign In" class="w-full"></Button>
+                        <Button type="submit" label="Sign In" class="w-full"></Button>
                     </form>
                 </div>
             </div>

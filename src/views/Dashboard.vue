@@ -2,12 +2,15 @@
 import { useLayout } from '@/layout/composables/layout';
 import { ProductService } from '@/service/ProductService';
 import { onMounted, ref, watch } from 'vue';
+import AuthService from '@/layout/api/auth'
+import AccessDenied from '@/views/pages/auth/Access.vue'
 
 const { getPrimary, getSurface, isDarkTheme } = useLayout();
 
 const products = ref(null);
 const chartData = ref(null);
 const chartOptions = ref(null);
+const checkRole = AuthService.checkRole("ADMIN");
 
 const items = ref([
     { label: 'Add New', icon: 'pi pi-fw pi-plus' },
@@ -98,10 +101,12 @@ watch([getPrimary, getSurface, isDarkTheme], () => {
     chartData.value = setChartData();
     chartOptions.value = setChartOptions();
 });
+
+
 </script>
 
 <template>
-    <div class="grid grid-cols-12 gap-8">
+    <div class="grid grid-cols-12 gap-8" v-if="checkRole">
         <div class="col-span-12 lg:col-span-6 xl:col-span-3">
             <div class="card mb-0">
                 <div class="flex justify-between mb-4">
@@ -340,5 +345,8 @@ watch([getPrimary, getSurface, isDarkTheme], () => {
                 </ul>
             </div>
         </div>
+    </div>
+    <div v-if="!checkRole">
+        <AccessDenied></AccessDenied>
     </div>
 </template>

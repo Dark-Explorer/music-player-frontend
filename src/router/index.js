@@ -1,5 +1,6 @@
 import AppLayout from '@/layout/AppLayout.vue';
 import { createRouter, createWebHistory } from 'vue-router';
+import AuthService from '@/layout/api/auth'
 
 const router = createRouter({
     history: createWebHistory(),
@@ -11,7 +12,8 @@ const router = createRouter({
                 {
                     path: '/',
                     name: 'dashboard',
-                    component: () => import('@/views/Dashboard.vue')
+                    component: () => import('@/views/Dashboard.vue'),
+                    meta: { requireAuth: true }
                 },
                 {
                     path: '/uikit/formlayout',
@@ -143,6 +145,18 @@ const router = createRouter({
             component: () => import('@/views/pages/auth/Error.vue')
         }
     ]
+});
+
+router.beforeEach(async (to, from, next) => {
+    const publicPages = ['/auth/login', '/auth/signup'];
+    const authRequired = !publicPages.includes(to.path);
+    const loggedIn = await AuthService.checkTokenValidity();
+
+    if (authRequired && !loggedIn) {
+        next('/auth/login');
+    } else {
+        next();
+    }
 });
 
 export default router;
