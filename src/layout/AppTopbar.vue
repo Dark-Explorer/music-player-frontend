@@ -8,7 +8,7 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
 
 const router = useRouter();
 
-const logout = async() => {
+const logout = async () => {
     await AuthService.logout()
         .then(() => {
             router.push('/auth/login');

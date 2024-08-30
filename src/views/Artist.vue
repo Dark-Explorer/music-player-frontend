@@ -3,6 +3,7 @@ import { ProductService } from '@/service/ProductService';
 import { FilterMatchMode } from '@primevue/core/api';
 import { useToast } from 'primevue/usetoast';
 import { onMounted, ref } from 'vue';
+import api from '@/layout/api/api';
 
 onMounted(() => {
     ProductService.getProducts().then((data) => (products.value = data));
@@ -20,48 +21,15 @@ const filters = ref({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS }
 });
 const submitted = ref(false);
-const statuses = ref([
-    { label: 'INSTOCK', value: 'instock' },
-    { label: 'LOWSTOCK', value: 'lowstock' },
-    { label: 'OUTOFSTOCK', value: 'outofstock' }
-]);
 
 function formatCurrency(value) {
     if (value) return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
     return;
 }
 
-function openNew() {
-    product.value = {};
-    submitted.value = false;
-    productDialog.value = true;
-}
-
 function hideDialog() {
     productDialog.value = false;
     submitted.value = false;
-}
-
-function saveProduct() {
-    submitted.value = true;
-
-    if (product?.value.name?.trim()) {
-        if (product.value.id) {
-            product.value.inventoryStatus = product.value.inventoryStatus.value ? product.value.inventoryStatus.value : product.value.inventoryStatus;
-            products.value[findIndexById(product.value.id)] = product.value;
-            toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
-        } else {
-            product.value.id = createId();
-            product.value.code = createId();
-            product.value.image = 'product-placeholder.svg';
-            product.value.inventoryStatus = product.value.inventoryStatus ? product.value.inventoryStatus.value : 'INSTOCK';
-            products.value.push(product.value);
-            toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000 });
-        }
-
-        productDialog.value = false;
-        product.value = {};
-    }
 }
 
 function editProduct(prod) {
@@ -75,7 +43,7 @@ function confirmDeleteProduct(prod) {
 }
 
 function deleteProduct() {
-    products.value = products.value.filter((val) => val.id !== product.value.id);
+    // products.value = products.value.filter((val) => val.id !== product.value.id);
     deleteProductDialog.value = false;
     product.value = {};
     toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Deleted', life: 3000 });
@@ -106,17 +74,6 @@ function exportCSV() {
     dt.value.exportCSV();
 }
 
-function confirmDeleteSelected() {
-    deleteProductsDialog.value = true;
-}
-
-function deleteSelectedProducts() {
-    products.value = products.value.filter((val) => !selectedProducts.value.includes(val));
-    deleteProductsDialog.value = false;
-    selectedProducts.value = null;
-    toast.add({ severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000 });
-}
-
 function getStatusLabel(status) {
     switch (status) {
         case 'INSTOCK':
@@ -132,6 +89,135 @@ function getStatusLabel(status) {
             return null;
     }
 }
+
+function saveProduct() {
+    submitted.value = true;
+
+    if (product?.value.name?.trim()) {
+        if (product.value.id) {
+            product.value.inventoryStatus = product.value.inventoryStatus.value ? product.value.inventoryStatus.value : product.value.inventoryStatus;
+            products.value[findIndexById(product.value.id)] = product.value;
+            toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
+        } else {
+            product.value.id = createId();
+            product.value.code = createId();
+            product.value.image = 'product-placeholder.svg';
+            product.value.inventoryStatus = product.value.inventoryStatus ? product.value.inventoryStatus.value : 'INSTOCK';
+            products.value.push(product.value);
+            toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000 });
+        }
+
+        productDialog.value = false;
+        product.value = {};
+    }
+}
+
+
+const rowIndex = ref();
+const artistDialog = ref(false);
+const deleteArtistDialog = ref(false);
+const artists = ref();
+const artist = ref({});
+
+const getArtists = async () => {
+    await api.get('/artists')
+        .then((response) => {
+            artists.value = response.data.result;
+            // console.log(response);
+        });
+}
+
+function openNew() {
+    artist.value = {};
+    submitted.value = false;
+    artistDialog.value = true;
+}
+
+const createArtistAPI = async () => {
+    await api.post(`/artists`, {
+        name: artist.value.name,
+        gender: artist.value.gender,
+        yob: artist.value.yob,
+    }).then(() => {
+        toast.add({ severity: 'success', summary: 'Successful', detail: 'Artist created', life: 3000 });
+    }).catch(() => {
+        toast.add({ severity: 'danger', summary: 'Error', detail: 'There is an error in creating artist', life: 3000 });
+    });
+}
+
+async function createArtist() {
+    submitted.value = true;
+    await createArtistAPI()
+        .then(() => {
+            artists.value.push(artist.value);
+            artist.value = {};
+            artistDialog.value = false;
+        }).catch((error) => {
+            console.log(error);
+        });
+
+function editArtist(curr_artist, index) {
+    artist.value = { ...curr_artist };
+    artistDialog.value = true;
+    rowIndex.value = index;
+}
+
+const editArtistAPI = async (id) => {
+    await api.put(`/artists/${id}`, {
+        name: artist.value.name,
+        gender: artist.value.gender,
+        yob: artist.value.yob,
+    }).then(() => {
+        toast.add({ severity: 'success', summary: 'Successful', detail: 'Artist updated', life: 3000 });
+    }).catch(() => {
+        toast.add({ severity: 'danger', summary: 'Error', detail: 'There is an error in updating', life: 3000 });
+    });
+}
+
+const deleteArtistAPI = async (id) => {
+    await api.delete(`/artists/${id}`)
+        .then(() => {
+            toast.add({ severity: 'success', summary: 'Successful', detail: 'Artist deleted', life: 3000 });
+        }).catch(() => {
+            toast.add({ severity: 'danger', summary: 'Error', detail: 'There is an error in deleting', life: 3000 });
+        })
+}
+
+function hideEditDialog() {
+    artistDialog.value = false;
+    submitted.value = false;
+}
+
+async function saveArtist(id) {
+    submitted.value = true;
+    await editArtistAPI(id)
+        .then(() => {
+            artists.value[rowIndex.value] = artist.value;
+            artistDialog.value = false;
+            artist.value = {};
+        }).catch((error) => {
+            console.log(error);
+        });
+}
+
+function confirmDeleteArtist(curr_artist) {
+    artist.value = curr_artist;
+    deleteArtistDialog.value = true;
+}
+
+async function deleteArtist(id) {
+    await deleteArtistAPI(id)
+        .then(() => {
+            artists.value = artists.value.filter((val) => val.id !== artist.value.id);
+            deleteArtistDialog.value = false;
+            artist.value = {};
+        })
+}
+
+onMounted(() => {
+    getArtists();
+})
+
 </script>
 
 <template>
@@ -148,6 +234,68 @@ function getStatusLabel(status) {
                 </template>
             </Toolbar>
 
+            <DataTable :value="artists" :paginator="true" :rows="10" :filters="filters" data-key="id">
+                <Column field="name" header="Name" sortable=""></Column>
+                <Column field="gender" header="Gender"></Column>
+                <Column field="yob" header="YOB"></Column>
+                <Column :exportable="false" style="min-width: 12rem">
+                    <template #body="slotProps">
+                        <Button icon="pi pi-pencil" outlined rounded class="mr-2" @click="editArtist(slotProps.data, slotProps.index)" />
+                        <Button icon="pi pi-trash" outlined rounded severity="danger" @click="confirmDeleteArtist(slotProps.data)" />
+                    </template>
+                </Column>
+            </DataTable>
+
+            <Dialog v-model:visible="artistDialog" :style="{ width: '450px' }" header="Artist Details" :modal="true">
+                <div class="flex flex-col gap-6">
+                    <!--                <img v-if="product.image" :src="`https://primefaces.org/cdn/primevue/images/product/${product.image}`" :alt="product.image" class="block m-auto pb-4" />-->
+                    <div>
+                        <label for="name" class="block font-bold mb-3">Name</label>
+                        <InputText id="name" v-model.trim="artist.name" required="true" autofocus :invalid="submitted && !artist.name" fluid />
+                        <small v-if="submitted && !artist.name" class="text-red-500">Name is required.</small>
+                    </div>
+                    <div>
+                        <label for="gender" class="block font-bold mb-3">Gender</label>
+                        <div class="flex flex-wrap gap-24">
+                            <div class="flex align-items-center">
+                                <RadioButton v-model="artist.gender" inputId="male" name="Male" value="Male" />
+                                <label for="male" class="ml-2">Male</label>
+                            </div>
+                            <div class="flex align-items-center">
+                                <RadioButton v-model="artist.gender" inputId="female" name="Female" value="Female" />
+                                <label for="female" class="ml-2">Female</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="yob" class="block font-bold mb-3">YOB</label>
+                        <InputText id="yob" v-model="artist.yob" required="true" fluid />
+                    </div>
+                </div>
+                <template #footer>
+                    <Button label="Cancel" icon="pi pi-times" text @click="hideEditDialog" />
+                    <Button v-if="artist.id" label="Save" icon="pi pi-check" @click="saveArtist(artist.id)" />
+                    <Button v-if="!artist.id" label="Create" icon="pi pi-check" @click="createArtist()" />
+                </template>
+            </Dialog>
+            <Dialog v-model:visible="deleteArtistDialog" :style="{ width: '450px' }" header="Confirm" :modal="true">
+                <div class="flex items-center gap-4">
+                    <i class="pi pi-exclamation-triangle !text-3xl" />
+                    <span v-if="artist"
+                    >Are you sure you want to delete <b>{{ artist.name }}</b
+                    >?</span
+                    >
+                </div>
+                <template #footer>
+                    <Button label="No" icon="pi pi-times" text @click="deleteArtistDialog = false" />
+                    <Button label="Yes" icon="pi pi-check" @click="deleteArtist(artist.id)" />
+                </template>
+            </Dialog>
+
+
+
+
+
             <DataTable
                 ref="dt"
                 v-model:selection="selectedProducts"
@@ -162,7 +310,7 @@ function getStatusLabel(status) {
             >
                 <template #header>
                     <div class="flex flex-wrap gap-2 items-center justify-between">
-                        <h4 class="m-0">Manage Artists</h4>
+                        <h4 class="m-0">Manage Products</h4>
                         <IconField>
                             <InputIcon>
                                 <i class="pi pi-search" />
@@ -172,32 +320,30 @@ function getStatusLabel(status) {
                     </div>
                 </template>
 
-<!--                <Column selectionMode="multiple" style="width: 3rem" :exportable="false"></Column>-->
-                <Column field="Name" header="Name" sortable style="min-width: 30rem"></Column>
-                <Column field="Gender" header="Gender" sortable style="min-width: 8rem"></Column>
-                <Column field="DOB" header="DOB" sortable style="min-width: 15rem"></Column>
-
-<!--                <Column header="Image">-->
-<!--                    <template #body="slotProps">-->
-<!--                        <img :src="`https://primefaces.org/cdn/primevue/images/product/${slotProps.data.image}`" :alt="slotProps.data.image" class="rounded" style="width: 64px" />-->
-<!--                    </template>-->
-<!--                </Column>-->
-<!--                <Column field="price" header="Price" sortable style="min-width: 8rem">-->
-<!--                    <template #body="slotProps">-->
-<!--                        {{ formatCurrency(slotProps.data.price) }}-->
-<!--                    </template>-->
-<!--                </Column>-->
-<!--                <Column field="category" header="Category" sortable style="min-width: 10rem"></Column>-->
-<!--                <Column field="rating" header="Reviews" sortable style="min-width: 12rem">-->
-<!--                    <template #body="slotProps">-->
-<!--                        <Rating :modelValue="slotProps.data.rating" :readonly="true" />-->
-<!--                    </template>-->
-<!--                </Column>-->
-<!--                <Column field="inventoryStatus" header="Status" sortable style="min-width: 12rem">-->
-<!--                    <template #body="slotProps">-->
-<!--                        <Tag :value="slotProps.data.inventoryStatus" :severity="getStatusLabel(slotProps.data.inventoryStatus)" />-->
-<!--                    </template>-->
-<!--                </Column>-->
+                <Column selectionMode="multiple" style="width: 3rem" :exportable="false"></Column>
+                <Column field="code" header="Code" sortable style="min-width: 12rem"></Column>
+                <Column field="name" header="Name" sortable style="min-width: 16rem"></Column>
+                <Column header="Image">
+                    <template #body="slotProps">
+                        <img :src="`https://primefaces.org/cdn/primevue/images/product/${slotProps.data.image}`" :alt="slotProps.data.image" class="rounded" style="width: 64px" />
+                    </template>
+                </Column>
+                <Column field="price" header="Price" sortable style="min-width: 8rem">
+                    <template #body="slotProps">
+                        {{ formatCurrency(slotProps.data.price) }}
+                    </template>
+                </Column>
+                <Column field="category" header="Category" sortable style="min-width: 10rem"></Column>
+                <Column field="rating" header="Reviews" sortable style="min-width: 12rem">
+                    <template #body="slotProps">
+                        <Rating :modelValue="slotProps.data.rating" :readonly="true" />
+                    </template>
+                </Column>
+                <Column field="inventoryStatus" header="Status" sortable style="min-width: 12rem">
+                    <template #body="slotProps">
+                        <Tag :value="slotProps.data.inventoryStatus" :severity="getStatusLabel(slotProps.data.inventoryStatus)" />
+                    </template>
+                </Column>
                 <Column :exportable="false" style="min-width: 12rem">
                     <template #body="slotProps">
                         <Button icon="pi pi-pencil" outlined rounded class="mr-2" @click="editProduct(slotProps.data)" />
@@ -216,46 +362,9 @@ function getStatusLabel(status) {
                     <small v-if="submitted && !product.name" class="text-red-500">Name is required.</small>
                 </div>
                 <div>
-                    <label for="gender" class="block font-bold mb-3">Gender</label>
-                    <Select id="gender" v-model="product.inventoryStatus" :options="statuses" optionLabel="label" placeholder="Select gender" fluid></Select>
-                </div>
-                <div>
                     <label for="dob" class="block font-bold mb-3">DOB</label>
                     <InputText id="dob" v-model="product.description" required="true" fluid />
                 </div>
-
-<!--                <div>-->
-<!--                    <span class="block font-bold mb-4">Category</span>-->
-<!--                    <div class="grid grid-cols-12 gap-4">-->
-<!--                        <div class="flex items-center gap-2 col-span-6">-->
-<!--                            <RadioButton id="category1" v-model="product.category" name="category" value="Accessories" />-->
-<!--                            <label for="category1">Accessories</label>-->
-<!--                        </div>-->
-<!--                        <div class="flex items-center gap-2 col-span-6">-->
-<!--                            <RadioButton id="category2" v-model="product.category" name="category" value="Clothing" />-->
-<!--                            <label for="category2">Clothing</label>-->
-<!--                        </div>-->
-<!--                        <div class="flex items-center gap-2 col-span-6">-->
-<!--                            <RadioButton id="category3" v-model="product.category" name="category" value="Electronics" />-->
-<!--                            <label for="category3">Electronics</label>-->
-<!--                        </div>-->
-<!--                        <div class="flex items-center gap-2 col-span-6">-->
-<!--                            <RadioButton id="category4" v-model="product.category" name="category" value="Fitness" />-->
-<!--                            <label for="category4">Fitness</label>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-
-<!--                <div class="grid grid-cols-12 gap-4">-->
-<!--                    <div class="col-span-6">-->
-<!--                        <label for="price" class="block font-bold mb-3">Price</label>-->
-<!--                        <InputNumber id="price" v-model="product.price" mode="currency" currency="USD" locale="en-US" fluid />-->
-<!--                    </div>-->
-<!--                    <div class="col-span-6">-->
-<!--                        <label for="quantity" class="block font-bold mb-3">Quantity</label>-->
-<!--                        <InputNumber id="quantity" v-model="product.quantity" integeronly fluid />-->
-<!--                    </div>-->
-<!--                </div>-->
             </div>
 
             <template #footer>
