@@ -8,6 +8,7 @@
         "lint": "eslint --fix . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
     },
     "dependencies": {
+        "@primevue/core": "^4.0.5",
         "@primevue/themes": "^4.0.0",
         "axios": "^1.7.5",
         "chart.js": "3.3.2",

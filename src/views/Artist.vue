@@ -44,7 +44,7 @@ async function createArtist() {
         artistDialog.value = false;
         toast.add({ severity: 'success', summary: 'Successful', detail: 'Artist created', life: 3000 });
     }).catch(() => {
-        toast.add({ severity: 'danger', summary: 'Error', detail: 'There is an error in creating artist', life: 3000 });
+        toast.add({ severity: 'error', summary: 'Error', detail: 'There is an error in creating artist', life: 3000 });
     });
 }
 
@@ -73,7 +73,7 @@ async function editArtist(id) {
         submitted.value = true;
         toast.add({ severity: 'success', summary: 'Successful', detail: 'Artist updated', life: 3000 });
     }).catch(() => {
-        toast.add({ severity: 'danger', summary: 'Error', detail: 'There is an error in updating', life: 3000 });
+        toast.add({ severity: 'error', summary: 'Error', detail: 'There is an error in updating', life: 3000 });
     });
 }
 
@@ -91,7 +91,7 @@ async function deleteArtist(id) {
         artist.value = {};
         toast.add({ severity: 'success', summary: 'Successful', detail: 'Artist deleted', life: 3000 });
     }).catch(() => {
-        toast.add({ severity: 'danger', summary: 'Error', detail: 'There is an error in deleting', life: 3000 });
+        toast.add({ severity: 'error', summary: 'Error', detail: 'There is an error in deleting', life: 3000 });
     })
 }
 
