@@ -44,7 +44,7 @@ const logout = async () => {
                     </g>
                 </svg>
 
-                <span>SAKAI</span>
+                <span>MUSIC APP</span>
             </router-link>
         </div>
 
