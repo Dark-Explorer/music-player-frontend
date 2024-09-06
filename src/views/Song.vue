@@ -28,7 +28,8 @@ const getArtists = async () => {
                 id: artist.id,
                 name: artist.name,
                 gender: artist.gender,
-                yob: artist.yob
+                yob: artist.yob,
+                image: artist.image
             }));
         });
 }

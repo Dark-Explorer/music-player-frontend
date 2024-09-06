@@ -38,6 +38,7 @@ async function createArtist() {
         name: artist.value.name,
         gender: artist.value.gender,
         yob: artist.value.yob,
+        image: artist.value.image,
     }).then(() => {
         artists.value.push(artist.value);
         artist.value = {};
@@ -66,6 +67,7 @@ async function editArtist(id) {
         name: artist.value.name,
         gender: artist.value.gender,
         yob: artist.value.yob,
+        image: artist.value.image
     }).then(() => {
         artists.value[rowIndex.value] = artist.value;
         artistDialog.value = false;

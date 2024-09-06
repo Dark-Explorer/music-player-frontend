@@ -1,6 +1,8 @@
 import AppLayout from '@/layout/AppLayout.vue';
 import { createRouter, createWebHistory } from 'vue-router';
 import AuthService from '@/layout/api/auth'
+import CustomerLayout from '@/layout/CustomerLayout.vue';
+import { all } from 'axios';
 
 const router = createRouter({
     history: createWebHistory(),
@@ -117,6 +119,11 @@ const router = createRouter({
                     component: () => import('@/views/User.vue')
                 },
                 {
+                    path: '/home',
+                    name: 'home',
+                    component: () => import('@/views/Home.vue')
+                },
+                {
                     path: '/documentation',
                     name: 'documentation',
                     component: () => import('@/views/pages/Documentation.vue')
@@ -157,7 +164,32 @@ const router = createRouter({
     ]
 });
 
-router.beforeEach(async (to, from, next) => {
+const customerRouter = createRouter({
+    history: createWebHistory(),
+    routes: [
+        {
+            path: '/customer',
+            component: CustomerLayout,
+            children: [
+                {
+                    path: '/home',
+                    name: 'home',
+                    component: () => import('@/views/Home.vue'),
+                },
+            ]
+        },
+        // Other routes can remain as is
+    ]
+});
+
+const allRoutes = [...router.options.routes, ...customerRouter.options.routes];
+
+const finalRouter = createRouter({
+    history: createWebHistory(),
+    routes: allRoutes,
+});
+
+finalRouter.beforeEach(async (to, from, next) => {
     const publicPages = ['/auth/login', '/auth/signup'];
     const authRequired = !publicPages.includes(to.path);
     const loggedIn = await AuthService.checkTokenValidity();
@@ -169,4 +201,4 @@ router.beforeEach(async (to, from, next) => {
     }
 });
 
-export default router;
+export default finalRouter;
