@@ -8,123 +8,123 @@ const router = createRouter({
     history: createWebHistory(),
     routes: [
         {
-            path: '/',
+            path: '/admin',
             component: AppLayout,
             children: [
                 {
-                    path: '/',
+                    path: 'dashboard',
                     name: 'dashboard',
                     component: () => import('@/views/Dashboard.vue'),
                     meta: { requireAuth: true }
                 },
                 {
-                    path: '/uikit/formlayout',
+                    path: 'uikit/formlayout',
                     name: 'formlayout',
                     component: () => import('@/views/uikit/FormLayout.vue')
                 },
                 {
-                    path: '/uikit/input',
+                    path: 'uikit/input',
                     name: 'input',
                     component: () => import('@/views/uikit/InputDoc.vue')
                 },
                 {
-                    path: '/uikit/button',
+                    path: 'uikit/button',
                     name: 'button',
                     component: () => import('@/views/uikit/ButtonDoc.vue')
                 },
                 {
-                    path: '/uikit/table',
+                    path: 'uikit/table',
                     name: 'table',
                     component: () => import('@/views/uikit/TableDoc.vue')
                 },
                 {
-                    path: '/uikit/list',
+                    path: 'uikit/list',
                     name: 'list',
                     component: () => import('@/views/uikit/ListDoc.vue')
                 },
                 {
-                    path: '/uikit/tree',
+                    path: 'uikit/tree',
                     name: 'tree',
                     component: () => import('@/views/uikit/TreeDoc.vue')
                 },
                 {
-                    path: '/uikit/panel',
+                    path: 'uikit/panel',
                     name: 'panel',
                     component: () => import('@/views/uikit/PanelsDoc.vue')
                 },
 
                 {
-                    path: '/uikit/overlay',
+                    path: 'uikit/overlay',
                     name: 'overlay',
                     component: () => import('@/views/uikit/OverlayDoc.vue')
                 },
                 {
-                    path: '/uikit/media',
+                    path: 'uikit/media',
                     name: 'media',
                     component: () => import('@/views/uikit/MediaDoc.vue')
                 },
                 {
-                    path: '/uikit/message',
+                    path: 'uikit/message',
                     name: 'message',
                     component: () => import('@/views/uikit/MessagesDoc.vue')
                 },
                 {
-                    path: '/uikit/file',
+                    path: 'uikit/file',
                     name: 'file',
                     component: () => import('@/views/uikit/FileDoc.vue')
                 },
                 {
-                    path: '/uikit/menu',
+                    path: 'uikit/menu',
                     name: 'menu',
                     component: () => import('@/views/uikit/MenuDoc.vue')
                 },
                 {
-                    path: '/uikit/charts',
+                    path: 'uikit/charts',
                     name: 'charts',
                     component: () => import('@/views/uikit/ChartDoc.vue')
                 },
                 {
-                    path: '/uikit/misc',
+                    path: 'uikit/misc',
                     name: 'misc',
                     component: () => import('@/views/uikit/MiscDoc.vue')
                 },
                 {
-                    path: '/uikit/timeline',
+                    path: 'uikit/timeline',
                     name: 'timeline',
                     component: () => import('@/views/uikit/TimelineDoc.vue')
                 },
                 {
-                    path: '/pages/empty',
+                    path: 'pages/empty',
                     name: 'empty',
                     component: () => import('@/views/pages/Empty.vue')
                 },
                 {
-                    path: '/pages/crud',
+                    path: 'pages/crud',
                     name: 'crud',
                     component: () => import('@/views/pages/Crud.vue')
                 },
                 {
-                    path: '/artists',
+                    path: 'artists',
                     name: 'artists',
                     component: () => import('@/views/Artist.vue')
                 },
                 {
-                    path: '/songs',
+                    path: 'songs',
                     name: 'songs',
                     component: () => import('@/views/Song.vue')
                 },
                 {
-                    path: '/users',
+                    path: 'users',
                     name: 'users',
                     component: () => import('@/views/User.vue')
                 },
                 {
-                    path: '/home',
+                    path: 'home',
                     name: 'home',
                     component: () => import('@/views/Home.vue')
                 },
                 {
-                    path: '/documentation',
+                    path: 'documentation',
                     name: 'documentation',
                     component: () => import('@/views/pages/Documentation.vue')
                 }
@@ -168,7 +168,7 @@ const customerRouter = createRouter({
     history: createWebHistory(),
     routes: [
         {
-            path: '/customer',
+            path: '/',
             component: CustomerLayout,
             children: [
                 {
@@ -178,7 +178,6 @@ const customerRouter = createRouter({
                 },
             ]
         },
-        // Other routes can remain as is
     ]
 });
 
@@ -190,7 +189,7 @@ const finalRouter = createRouter({
 });
 
 finalRouter.beforeEach(async (to, from, next) => {
-    const publicPages = ['/auth/login', '/auth/signup'];
+    const publicPages = ['/auth/login', '/auth/signup', '/home'];
     const authRequired = !publicPages.includes(to.path);
     const loggedIn = await AuthService.checkTokenValidity();
 

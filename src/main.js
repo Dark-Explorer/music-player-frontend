@@ -6,6 +6,7 @@ import Aura from '@primevue/themes/aura';
 import PrimeVue from 'primevue/config';
 import ConfirmationService from 'primevue/confirmationservice';
 import ToastService from 'primevue/toastservice';
+// import FontAwesomeIcon from '@fortawesome/vue-fontawesome';
 
 import '@/assets/styles.scss';
 import '@/assets/tailwind.css';
@@ -23,5 +24,6 @@ app.use(PrimeVue, {
 });
 app.use(ToastService);
 app.use(ConfirmationService);
+// app.use(FontAwesomeIcon);
 
 app.mount('#app');

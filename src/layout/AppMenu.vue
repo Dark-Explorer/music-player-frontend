@@ -7,30 +7,30 @@ const model = ref([
     {
         label: 'Home',
         items: [
-            { label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/' },
-            { label: 'Artist', icon: 'pi pi-fw pi-pencil', to: '/artists' },
-            { label: 'User', icon: 'pi pi-fw pi-users', to: '/users' },
-            { label: 'Song', icon: 'pi pi-fw pi-play', to: '/songs' },
+            { label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/admin/' },
+            { label: 'Artist', icon: 'pi pi-fw pi-pencil', to: '/admin/artists' },
+            { label: 'User', icon: 'pi pi-fw pi-users', to: '/admin/users' },
+            { label: 'Song', icon: 'pi pi-fw pi-play', to: '/admin/songs' },
         ]
     },
     {
         label: 'UI Components',
         items: [
-            { label: 'Form Layout', icon: 'pi pi-fw pi-id-card', to: '/uikit/formlayout' },
-            { label: 'Input', icon: 'pi pi-fw pi-check-square', to: '/uikit/input' },
-            { label: 'Button', icon: 'pi pi-fw pi-mobile', to: '/uikit/button', class: 'rotated-icon' },
-            { label: 'Table', icon: 'pi pi-fw pi-table', to: '/uikit/table' },
-            { label: 'List', icon: 'pi pi-fw pi-list', to: '/uikit/list' },
-            { label: 'Tree', icon: 'pi pi-fw pi-share-alt', to: '/uikit/tree' },
-            { label: 'Panel', icon: 'pi pi-fw pi-tablet', to: '/uikit/panel' },
-            { label: 'Overlay', icon: 'pi pi-fw pi-clone', to: '/uikit/overlay' },
-            { label: 'Media', icon: 'pi pi-fw pi-image', to: '/uikit/media' },
-            { label: 'Menu', icon: 'pi pi-fw pi-bars', to: '/uikit/menu' },
+            { label: 'Form Layout', icon: 'pi pi-fw pi-id-card', to: '/admin/uikit/formlayout' },
+            { label: 'Input', icon: 'pi pi-fw pi-check-square', to: '/admin/uikit/input' },
+            { label: 'Button', icon: 'pi pi-fw pi-mobile', to: '/admin/uikit/button', class: 'rotated-icon' },
+            { label: 'Table', icon: 'pi pi-fw pi-table', to: '/admin/uikit/table' },
+            { label: 'List', icon: 'pi pi-fw pi-list', to: '/admin/uikit/list' },
+            { label: 'Tree', icon: 'pi pi-fw pi-share-alt', to: '/admin/uikit/tree' },
+            { label: 'Panel', icon: 'pi pi-fw pi-tablet', to: '/admin/uikit/panel' },
+            { label: 'Overlay', icon: 'pi pi-fw pi-clone', to: '/admin/uikit/overlay' },
+            { label: 'Media', icon: 'pi pi-fw pi-image', to: '/admin/uikit/media' },
+            { label: 'Menu', icon: 'pi pi-fw pi-bars', to: '/admin/uikit/menu' },
             { label: 'Message', icon: 'pi pi-fw pi-comment', to: '/uikit/message' },
-            { label: 'File', icon: 'pi pi-fw pi-file', to: '/uikit/file' },
-            { label: 'Chart', icon: 'pi pi-fw pi-chart-bar', to: '/uikit/charts' },
-            { label: 'Timeline', icon: 'pi pi-fw pi-calendar', to: '/uikit/timeline' },
-            { label: 'Misc', icon: 'pi pi-fw pi-circle', to: '/uikit/misc' }
+            { label: 'File', icon: 'pi pi-fw pi-file', to: '/admin/uikit/file' },
+            { label: 'Chart', icon: 'pi pi-fw pi-chart-bar', to: '/admin/uikit/charts' },
+            { label: 'Timeline', icon: 'pi pi-fw pi-calendar', to: '/admin/uikit/timeline' },
+            { label: 'Misc', icon: 'pi pi-fw pi-circle', to: '/admin/uikit/misc' }
         ]
     },
     {
