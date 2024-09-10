@@ -106,17 +106,17 @@ const router = createRouter({
                 {
                     path: 'artists',
                     name: 'artists',
-                    component: () => import('@/views/Artist.vue')
+                    component: () => import('@/views/AdminArtist.vue')
                 },
                 {
                     path: 'songs',
                     name: 'songs',
-                    component: () => import('@/views/Song.vue')
+                    component: () => import('@/views/AdminSong.vue')
                 },
                 {
                     path: 'users',
                     name: 'users',
-                    component: () => import('@/views/User.vue')
+                    component: () => import('@/views/AdminUser.vue')
                 },
                 {
                     path: 'home',
@@ -176,6 +176,16 @@ const customerRouter = createRouter({
                     name: 'home',
                     component: () => import('@/views/Home.vue'),
                 },
+                {
+                    path: '/artists',
+                    name: 'artist',
+                    component: () => import('@/views/Artist.vue')
+                },
+                {
+                    path: '/artist/:id',
+                    name: 'artistDetail',
+                    component: () => import('@/views/ArtistDetail.vue')
+                }
             ]
         },
     ]

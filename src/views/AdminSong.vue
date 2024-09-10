@@ -1,7 +1,7 @@
 <script setup>
 import { FilterMatchMode } from '@primevue/core/api';
 import { useToast } from 'primevue/usetoast';
-import { computed, onMounted, ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import api from '@/layout/api/api';
 
 const toast = useToast();
@@ -15,7 +15,7 @@ const songDialog = ref(false);
 const deleteSongDialog = ref(false);
 const songs = ref();
 const song = ref({});
-const artists = ref();
+const artists = ref({});
 const artistModified = ref();
 
 // watch(song.image, (newVal) => {
