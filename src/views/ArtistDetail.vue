@@ -97,17 +97,19 @@ onMounted(() => {
                     :key="song.id"
                     class="flex justify-between items-center bg-gray-50 p-4 rounded hover:bg-gray-200 transition duration-200 mb-2"
                 >
-                    <div class="flex items-center">
-                        <img
-                            :src="song.image"
-                            :alt="song.title"
-                            class="w-12 h-12 object-cover rounded mr-3"
-                        />
-                        <div>
-                            <h3 class="font-semibold text-gray-800">{{ song.title }}</h3>
-                            <p class="text-gray-600">{{ song.artist }}</p>
+                    <router-link :to="`/song/${song.id}`">
+                        <div class="flex items-center">
+                            <img
+                                :src="song.image"
+                                :alt="song.title"
+                                class="w-12 h-12 object-cover rounded mr-3"
+                            />
+                            <div>
+                                <h3 class="font-semibold text-gray-800">{{ song.title }}</h3>
+                                <p class="text-gray-600">{{ song.artist }}</p>
+                            </div>
                         </div>
-                    </div>
+                    </router-link>
 <!--                    <span class="text-gray-500">{{ song.duration }}</span>-->
                 </li>
             </ul>
