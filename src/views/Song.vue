@@ -3,15 +3,75 @@ import { ref, computed, onMounted } from 'vue';
 import { VueSound } from 'vue-sound';
 import { useRoute } from 'vue-router';
 import api from '@/layout/api/api';
+import { useToast } from 'primevue/usetoast';
 
+const toast = useToast();
 const route = useRoute();
 const songId = computed(() => route.params.id);
 const song = ref({});
+const playlistName = ref();
+const playlists = ref();
+const addToPlaylistDialog = ref(false);
+const submitted = ref(false);
+const selectedPlaylist = ref();
+const newPlaylistDialog = ref(false);
+const submittedNewPlaylist = ref(false);
+
+function openPlaylistDialog() {
+    addToPlaylistDialog.value = true;
+    getCurrentUserPlaylist()
+}
+
+function hidePlaylistDialog() {
+    addToPlaylistDialog.value = false;
+    submitted.value = false;
+}
+
+function openNewPlaylistDialog() {
+    newPlaylistDialog.value = true;
+}
+
+function hideNewPlaylistDialog() {
+    newPlaylistDialog.value = false;
+    submittedNewPlaylist.value = false;
+}
 
 async function fetchSongDetail(id) {
     await api.get(`/songs/${id}`)
         .then((response) => {
             song.value = response.data.result;
+        }).catch((error) => {
+            console.log(error);
+        })
+}
+
+async function addSongToPlaylist(playlistId, songId) {
+    await api.post(`/playlists/${playlistId}/songs/${songId}`)
+        .then(() => {
+            toast.add({ severity: 'success', summary: 'Successful', detail: 'Song added to playlist', life: 3000 });
+        }).catch(() => {
+            toast.add({ severity: 'error', summary: 'Error', detail: 'There are some errors, please try again!', life: 3000 });
+        })
+}
+
+async function createNewPlaylist() {
+    hideNewPlaylistDialog();
+    await api.post(`/playlists`, {
+        name: playlistName.value
+    }).then(() => {
+        toast.add({ severity: 'success', summary: 'Successful', detail: 'Playlist created', life: 3000 });
+    }).catch(() => {
+        toast.add({ severity: 'error', summary: 'Error', detail: 'There are some errors, please try again!', life: 3000 });
+    })
+}
+
+async function getCurrentUserPlaylist() {
+    await api.get(`/playlists/myPlaylists`)
+        .then((response) => {
+            playlists.value = response.data.result.map(playlist => ({
+                id: playlist.id,
+                name: playlist.name
+            }));
         }).catch((error) => {
             console.log(error);
         })
@@ -28,7 +88,10 @@ onMounted(() => {
         <div class="song-player p-4 w-2/3">
             <Card class="song-card">
                 <template #title>
-                    <h2 class="text-2xl font-bold mb-4">{{ song.title }}</h2>
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-2xl font-bold mb-4">{{ song.title }}</h2>
+                        <Button label="Add to playlist" icon="pi pi-plus" icon-pos="left" @click="openPlaylistDialog" />
+                    </div>
                 </template>
                 <template #content>
                     <vue-sound
@@ -63,6 +126,34 @@ onMounted(() => {
 <!--                <img :src="artist.image" :alt="artist.name" />-->
 <!--            </div>-->
 <!--        </div>-->
+        <Dialog v-model:visible="addToPlaylistDialog" :style="{ width: '450px' }" header="Add to playlist" :modal="true">
+            <div class="flex flex-col gap-6">
+                <div v-for="playlist in playlists" :key="playlist.id" class="flex flex-wrap gap-2">
+                    <RadioButton v-model="selectedPlaylist" :inputId="playlist.id" name="playlist" :value="playlist.id" />
+                    <label :for="playlist.id">{{ playlist.name }}</label>
+                </div>
+                <div class="flex flex-wrap">
+                    <Button type="button" label="Create new playlist" icon="pi pi-plus" @click="openNewPlaylistDialog" />
+                </div>
+            </div>
+            <template #footer>
+                <Button label="Save" icon="pi pi-check" text @click="addSongToPlaylist(selectedPlaylist, song.id)" />
+                <Button label="Cancel" icon="pi pi-times" text @click="hidePlaylistDialog" />
+    <!--            <Button label="Save" icon="pi pi-check" @click="editArtist(artist.id)" />-->
+            </template>
+        </Dialog>
+        <Dialog v-model:visible="newPlaylistDialog" :style="{ width: '450px' }" header="New playlist" :modal="true">
+            <div class="flex flex-col gap-6">
+                <div>
+                    <label for="newPlaylist" class="block font-bold mb-3">Name</label>
+                    <InputText id="newPlaylist" v-model="playlistName" required="true" fluid />
+                </div>
+            </div>
+            <template #footer>
+                <Button label="Save" icon="pi pi-check" text @click="createNewPlaylist" />
+                <Button label="Cancel" icon="pi pi-times" text @click="hideNewPlaylistDialog" />
+            </template>
+        </Dialog>
     </div>
 </template>
 
