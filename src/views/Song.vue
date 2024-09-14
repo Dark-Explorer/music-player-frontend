@@ -133,11 +133,11 @@ onMounted(() => {
                     <label :for="playlist.id">{{ playlist.name }}</label>
                 </div>
                 <div class="flex flex-wrap">
-                    <Button type="button" label="Create new playlist" icon="pi pi-plus" @click="openNewPlaylistDialog" />
+                    <Button type="button" label="Add" icon="pi pi-check" @click="addSongToPlaylist(selectedPlaylist, song.id)" />
                 </div>
             </div>
             <template #footer>
-                <Button label="Save" icon="pi pi-check" text @click="addSongToPlaylist(selectedPlaylist, song.id)" />
+                <Button label="Create new playlist" icon="pi pi-plus" text @click="openNewPlaylistDialog" />
                 <Button label="Cancel" icon="pi pi-times" text @click="hidePlaylistDialog" />
     <!--            <Button label="Save" icon="pi pi-check" @click="editArtist(artist.id)" />-->
             </template>

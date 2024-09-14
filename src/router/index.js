@@ -190,6 +190,16 @@ const customerRouter = createRouter({
                     path: '/song/:id',
                     name: 'songDetail',
                     component: () => import('@/views/Song.vue')
+                },
+                {
+                    path: '/playlists',
+                    name: 'playlists',
+                    component: () => import('@/views/Playlist.vue')
+                },
+                {
+                    path: '/playlist/:id',
+                    name: 'singlePlaylist',
+                    component: () => import('@/views/SinglePlaylist.vue')
                 }
             ]
         },

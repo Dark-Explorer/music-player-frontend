@@ -1,9 +1,11 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
+import { useToast } from 'primevue/usetoast';
 import api from '@/layout/api/api';
 
 const route = useRoute();
+const toast = useToast();
 const artistId = computed(() => route.params.id);
 const artist = ref({});
 const songs = ref({});
@@ -31,42 +33,6 @@ onMounted(() => {
     fetchSongsByArtist(artistId.value);
 })
 
-// const artist = ref({
-//     name: "Sơn Tùng M-TP",
-//     followers: "2.527.187",
-//     image: "https://via.placeholder.com/150", // Replace with actual artist image URL
-//     songs: [
-//         {
-//             id: 1,
-//             title: "Âm Thầm Bên Em",
-//             artist: "Sơn Tùng M-TP",
-//             duration: "04:51",
-//             image: "https://via.placeholder.com/50", // Replace with actual song image URL
-//         },
-//         {
-//             id: 2,
-//             title: "Muộn Rồi Mà Sao Còn",
-//             artist: "Sơn Tùng M-TP",
-//             duration: "04:36",
-//             image: "https://via.placeholder.com/50",
-//         },
-//         {
-//             id: 3,
-//             title: "Hãy Trao Cho Anh",
-//             artist: "Sơn Tùng M-TP, Snoop Dogg",
-//             duration: "04:06",
-//             image: "https://via.placeholder.com/50",
-//         },
-//         {
-//             id: 4,
-//             title: "Nơi Này Có Anh",
-//             artist: "Sơn Tùng M-TP",
-//             duration: "04:22",
-//             image: "https://via.placeholder.com/50",
-//         },
-//     ],
-// });
-
 </script>
 <template>
     <div class="bg-gray-100 min-h-screen p-6">
@@ -79,14 +45,7 @@ onMounted(() => {
                 />
                 <div class="ml-4">
                     <h1 class="text-4xl font-bold text-gray-800">{{ artist.name }}</h1>
-                    <button class="mt-2 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition duration-200">
-            <span class="flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-              </svg>
-              QUAN TÂM
-            </span>
-                    </button>
+                    <p>YOB: {{ artist.yob }}</p>
                 </div>
             </div>
 
@@ -106,7 +65,7 @@ onMounted(() => {
                             />
                             <div>
                                 <h3 class="font-semibold text-gray-800">{{ song.title }}</h3>
-                                <p class="text-gray-600">{{ song.artist }}</p>
+<!--                                <p class="text-gray-600">{{ song.artist }}</p>-->
                             </div>
                         </div>
                     </router-link>
