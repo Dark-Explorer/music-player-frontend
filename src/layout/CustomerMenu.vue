@@ -11,6 +11,12 @@ const model = ref([
             { label: 'Artist', icon: 'pi pi-fw pi-pencil', to: '/artists' },
             { label: 'My Playlists', icon: 'pi pi-fw pi-list', to: '/playlists' },
         ]
+    },
+    {
+        label: 'Personal',
+        items: [
+            { label: 'Info', icon: 'pi pi-fw pi-user', to: '/info' },
+        ]
     }
 ]);
 </script>
