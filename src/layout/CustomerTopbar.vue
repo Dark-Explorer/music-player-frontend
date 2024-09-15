@@ -37,7 +37,7 @@ const logout = async () => {
 
 <!--        <SearchBar></SearchBar>-->
         <SearchBarTest></SearchBarTest>
-        
+
         <div class="layout-topbar-actions">
             <div class="layout-config-menu">
                 <button type="button" class="layout-topbar-action" @click="toggleDarkMode">
