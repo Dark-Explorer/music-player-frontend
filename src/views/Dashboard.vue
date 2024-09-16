@@ -1,6 +1,5 @@
 <script setup>
 import { useLayout } from '@/layout/composables/layout';
-import { ProductService } from '@/service/ProductService';
 import { onMounted, ref, watch } from 'vue';
 import AuthService from '@/layout/api/auth'
 import AccessDenied from '@/views/pages/auth/Access.vue'
@@ -16,12 +15,6 @@ const items = ref([
     { label: 'Add New', icon: 'pi pi-fw pi-plus' },
     { label: 'Remove', icon: 'pi pi-fw pi-trash' }
 ]);
-
-onMounted(() => {
-    ProductService.getProductsSmall().then((data) => (products.value = data));
-    chartData.value = setChartData();
-    chartOptions.value = setChartOptions();
-});
 
 function setChartData() {
     const documentStyle = getComputedStyle(document.documentElement);

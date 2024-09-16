@@ -18,7 +18,7 @@ const submitLoginForm = async () => {
             username: username.value,
             password: password.value,
         }).then((response) => {
-            router.push('/');
+            router.push('/home');
             localStorage.setItem('token', response.data.result.token);
         }).catch ((error) => {
             errorMessage.value = error.response.data.message || 'An error occurred';
@@ -66,10 +66,6 @@ const submitLoginForm = async () => {
                         <Password id="password1" v-model="password" placeholder="Password" :toggleMask="true" class="mb-4" fluid :feedback="false"></Password>
 
                         <div class="flex items-center justify-between mt-2 mb-8 gap-8">
-<!--                            <div class="flex items-center">-->
-<!--                                <Checkbox v-model="checked" id="rememberme1" binary class="mr-2"></Checkbox>-->
-<!--                                <label for="rememberme1">Remember me</label>-->
-<!--                            </div>-->
                             <span class="font-medium no-underline ml-2 text-right cursor-pointer text-primary">Forgot password?</span>
                             <router-link class="font-medium no-underline ml-2 text-right cursor-pointer text-primary" :to="{ name: 'signup' }">Don't have an account? Create one here!</router-link>
                         </div>

@@ -1,15 +1,7 @@
 <script setup>
 import { useLayout } from '@/layout/composables/layout';
-import { ProductService } from '@/service/ProductService';
 import { onMounted, ref, watch } from 'vue';
-import AuthService from '@/layout/api/auth'
-import AccessDenied from '@/views/pages/auth/Access.vue'
 
-onMounted(() => {
-    ProductService.getProductsSmall().then((data) => (products.value = data.slice(0, 9)));
-})
-
-const products = ref();
 const items = ref([
     {
         label: 'Anh trai vượt ngàn chông gai',

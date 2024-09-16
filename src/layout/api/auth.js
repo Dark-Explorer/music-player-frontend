@@ -3,7 +3,7 @@ import axios from 'axios';
 import router from '@/router';
 import { hasRole } from '@/utils/jwtUtils';
 
-const API_URL = 'http://localhost:1208/music/auth/'; // adjust this to your API URL
+const API_URL = 'http://localhost:1208/music/auth/';
 
 class AuthService {
     login(username, password) {

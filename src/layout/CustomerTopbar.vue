@@ -4,12 +4,12 @@ import AppConfigurator from './AppConfigurator.vue';
 import SearchBar from '@/layout/SearchBar.vue';
 import AuthService from '@/layout/api/auth'
 import { useRouter } from 'vue-router';
-import { ref } from 'vue';
 import SearchBarTest from '@/layout/SearchBarTest.vue';
 
 const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
 
 const router = useRouter();
+const checkRole = AuthService.checkRole("ADMIN");
 
 const logout = async () => {
     await AuthService.logout()
@@ -28,10 +28,10 @@ const logout = async () => {
             <button class="layout-menu-button layout-topbar-action" @click="onMenuToggle">
                 <i class="pi pi-bars"></i>
             </button>
-            <router-link to="/" class="layout-topbar-logo">
-                <img class="w-16 h-16" src="https://img-cdn.pixlr.com/image-generator/history/65bb506dcb310754719cf81f/ede935de-1138-4f66-8ed7-44bd16efc709/medium.webp" alt="ss">
+            <router-link :to="`/home`" class="layout-topbar-logo">
+                <img class="h-12" src="/demo/images/logo.png" alt="ss">
 
-                <span>MUSIC APP</span>
+                <span>MY MUSIC</span>
             </router-link>
         </div>
 
@@ -64,18 +64,9 @@ const logout = async () => {
 
             <div class="layout-topbar-menu hidden lg:block">
                 <div class="layout-topbar-menu-content">
-                    <button type="button" class="layout-topbar-action">
-                        <i class="pi pi-calendar"></i>
-                        <span>Calendar</span>
-                    </button>
-                    <button type="button" class="layout-topbar-action">
-                        <i class="pi pi-inbox"></i>
-                        <span>Messages</span>
-                    </button>
-                    <button type="button" class="layout-topbar-action">
-                        <i class="pi pi-user"></i>
-                        <span>Profile</span>
-                    </button>
+                    <router-link :to="`/admin/`" v-if="checkRole">
+                        <Button label="Admin Section" severity="info" />
+                    </router-link>
                     <Button @click="logout" label="Logout" severity="danger" />
                 </div>
             </div>

@@ -18,9 +18,7 @@ api.interceptors.request.use(
             if (isValid) {
                 config.headers['Authorization'] = 'Bearer ' + token;
             } else {
-                // Token is invalid, you might want to redirect to login or refresh token here
                 AuthService.logout();
-                // You might want to throw an error or handle this case as per your app's logic
             }
         }
         return config;
